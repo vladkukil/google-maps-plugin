@@ -1,14 +1,14 @@
 <?php
 require_once 'google-maps.php';
 
-class Test_Widget extends WP_Widget {
+class store_Widget extends WP_Widget {
 	public function __construct()
 	{
 		$widget_options = array(
-			'classname'   => 'test_widget',
-			'description' => __( 'Test' )
+			'classname'   => 'store_widget',
+			'description' => __( 'Stores location widget' )
 		);
-		parent::__construct( 'test_widget', __( 'Test' ), $widget_options );
+		parent::__construct( 'store_widget', __( 'Stores Location' ), $widget_options );
 	}
 
 	public function widget($args, $instance) {
@@ -113,8 +113,8 @@ add_action('wp_ajax_getposttitle', 'get_title_func');
 add_action('wp_ajax_nopriv_getposttitle', 'get_title_func');
 
 
-function test_register_widget() {
-	register_widget( 'test_Widget' );
+function store_register_widget() {
+	register_widget( 'store_Widget' );
 }
-add_action( 'widgets_init', 'test_register_widget' );
+add_action( 'widgets_init', 'store_register_widget' );
 
