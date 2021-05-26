@@ -109,8 +109,8 @@ class store_Widget extends WP_Widget {
 
 	}
 }
-add_action('wp_ajax_getposttitle', 'get_title_func');
-add_action('wp_ajax_nopriv_getposttitle', 'get_title_func');
+
+
 
 
 function store_register_widget() {
