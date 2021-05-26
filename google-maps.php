@@ -7,7 +7,7 @@
 * Author URI: http://yourwebsiteurl.com/
 **/
 
-require_once 'test-widget.php';
+require_once 'class-maps-widget.php';
 
 
 function stores_post_type(){
