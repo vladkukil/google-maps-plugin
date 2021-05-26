@@ -56,7 +56,6 @@ function stores_post_type(){
 	);
 	register_post_type('stores', $args);
 }
-add_action( 'init', 'create_taxonomy_corporate' );
 
 add_action('init', 'stores_post_type', 0);
 
