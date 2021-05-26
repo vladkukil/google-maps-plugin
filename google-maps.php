@@ -9,6 +9,7 @@
 
 require_once 'test-widget.php';
 
+
 function stores_post_type(){
 	$labels = array(
 		'name' => __('Stores'),
@@ -83,33 +84,31 @@ function Stores_meta_box() {
 	);
 }
 
+
+
 function stores_callback() {
-	$stores = get_posts( array(
-		'post_status' => 'publish',
-		'post_type' => 'stores',
-	) );
-	// generate a nonce field
+    // generate a nonce field
 	wp_nonce_field( 'stores_meta_box', 'stores_nonce' );
 	// get previously saved meta values (if any)
 
 		?>
 
-		<p><label for="stores-date"><?php _e( 'Store Name'); ?>
-				<input class="widefat" id="store-name" type="text" name="store-name" required maxlength="30"
+		<p><label for="stores-name"><?php _e( 'Store Name'); ?>
+				<input class="widefat" id="store-name" type="text" name="store-name" required
 				       placeholder="Store Name" /></label></p>
 
-		<p><label for="stores-date"> <?php _e( 'Store Description'); ?>
-			<input class="widefat" id="store-description" type="text" name="store-description" required maxlength="30"
+		<p><label for="stores-description"> <?php _e( 'Store Description'); ?>
+			<input class="widefat" id="store-description" type="text" name="store-description" required
 			       placeholder="Store Description" /></label></p>
 
-		<p><label for="stores-date"> <?php _e( 'Store Address'); ?>
-				<input class="widefat" id="store-address" type="text" name="store-address" required maxlength="30"
+		<p><label for="stores-address"> <?php _e( 'Store Address'); ?>
+				<input class="widefat" id="store-address" type="text" name="store-address" required
 				       placeholder="Store Address" /></label></p>
 		<?php
 	
 }
 
-function Stores_save($post_id) {
+function stores_save($post_id) {
 	// check if nonce is set
 	if ( ! isset( $_POST['stores_nonce'] ) ) {
 		return;
@@ -145,3 +144,32 @@ function Stores_save($post_id) {
 }
 
 add_action( 'save_post', 'stores_save');
+
+add_shortcode('google-maps', 'map_shortcode');
+
+function map_shortcode() {
+
+		return '
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>My Google Map</title>
+</head>
+<body>
+<h1>Our stores are located:</h1>
+<div id="map"></div>
+
+</body>
+</html>';
+
+}
+
+
+?>
+
+
+

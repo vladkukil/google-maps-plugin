@@ -29,8 +29,6 @@ class Test_Widget extends WP_Widget {
             </style>
         </head>
         <body>
-        <h1>My Google Map</h1>
-        <div id="map"></div>
         <script>
             function initMap() {
                 let coords = [];
@@ -87,14 +85,10 @@ class Test_Widget extends WP_Widget {
                             marker.addListener("click", () => {
                                 infowindow.open(map, marker);
                             });
-
                         }
-
                     });
                 }
             }
-
-
 
         </script>
         <script async
@@ -104,39 +98,15 @@ class Test_Widget extends WP_Widget {
         </body>
         </html>
 
-            <?php
+        <?php
 	}
 
 	public function form($instance) {
-		$name = $instance['name'] ?? 'not found';
-		$description = $instance['description'] ?? 'not found';
-		$address = $instance['address'] ?? 'not found';
-		?>
-		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'name' ) ); ?>"><?php _e( 'Name of Store:' ); ?></label>
-			<input type="text" value="<?php echo esc_attr( $name ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'name' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'name' ) ); ?>" class="widefat" />
-			<br />
-		</p>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'address' ); ?>"><?php _e( 'address:' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'address' ); ?>" name="<?php echo $this->get_field_name( 'address' ); ?>" type="text" step="1" min="1" value="<?php echo $address; ?>" size="3" />
-			<br />
-		</p>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'description' ); ?>"><?php _e( 'description:' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'description' ); ?>" name="<?php echo $this->get_field_name( 'description' ); ?>" type="text" step="1" min="1" value="<?php echo $description; ?>" size="3" />
-			<br />
-		</p>
 
-<?php
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance          = $old_instance;
-		$instance['name'] = sanitize_text_field( $new_instance['name'] );
-		$instance['address'] = sanitize_text_field( $new_instance['address'] );
-		$instance['description'] = sanitize_text_field( $new_instance['description'] );
-		return $instance;
+
 	}
 }
 add_action('wp_ajax_getposttitle', 'get_title_func');
