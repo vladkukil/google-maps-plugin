@@ -7,8 +7,14 @@
 * Author URI: http://yourwebsiteurl.com/
 **/
 
-require_once 'class-maps-widget.php';
+add_action( 'wp_enqueue_scripts', 'my_scripts_method2' );
+function my_scripts_method2(){
+	wp_enqueue_script('googleapi', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAFKGM4i-IihJp62mQ9sAbHJG0WzfyTJQg');
+	wp_enqueue_script( 'axios','https://unpkg.com/axios/dist/axios.min.js' );
+	wp_enqueue_script( 'googlemaps', plugins_url()  . '/google-maps-plugin/map.js');
+}
 
+require_once 'class-maps-widget.php';
 
 function stores_post_type(){
 	$labels = array(
@@ -104,7 +110,7 @@ function stores_callback() {
 				<input class="widefat" id="store-address" type="text" name="store-address" required
 				       placeholder="Store Address" /></label></p>
 		<?php
-	
+
 }
 
 function stores_save($post_id) {
@@ -146,9 +152,10 @@ add_action( 'save_post', 'stores_save');
 
 add_shortcode('google-maps', 'map_shortcode');
 
+
 function map_shortcode() {
 
-		return '
+	return '
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -161,14 +168,10 @@ function map_shortcode() {
 <body>
 <h1>Our stores are located:</h1>
 <div id="map"></div>
-
 </body>
 </html>';
 
 }
-
-
 ?>
-
 
 

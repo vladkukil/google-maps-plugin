@@ -12,6 +12,20 @@ class store_Widget extends WP_Widget {
 	}
 
 	public function widget($args, $instance) {
+		$q_args = array(
+			'post_type' => 'stores',
+		);
+		$coords = array();
+		$names = array();
+		$desc = array();
+		$query = new WP_Query($q_args);
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			global $post;
+			array_push($coords, get_post_meta( $post->ID, 'store-address', true));
+			array_push($names, get_post_meta( $post->ID, 'store-name', true ));
+			array_push($desc, get_post_meta( $post->ID, 'store-description', true ));
+		}
 	    ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -29,76 +43,14 @@ class store_Widget extends WP_Widget {
             </style>
         </head>
         <body>
-        <script>
-            function initMap() {
-                let coords = [];
-                let names = [];
-                let desc = [];
-                <?php $query_args = array(
-	                'post_type' => 'stores',
-                );
-	                $query = new WP_Query( $query_args );
-	                while ( $query->have_posts() ) {
-		                $query->the_post();
-		                global $post;
-		                ?>
-                coords.push('<?php echo get_post_meta( $post->ID, 'store-address', true )?>');
-                names.push('<?php echo get_post_meta( $post->ID, 'store-name', true )?>');
-                desc.push('<?php echo get_post_meta( $post->ID, 'store-description', true )?>');
-		                <?php
-	                }
-	                ?>
-
-                let options = {
-                    zoom: 8,
-                    center: {lat: 49.5850, lng: 36.1409},
-                }
-                let map = new google.maps.Map(document.getElementById('map'), options);
-                let i;
-                for (i = 0; i < coords.length; i++) {
-                    let description = desc[i];
-                    let name = names[i];
-
-                    axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
-                        params: {
-                            address: coords[i],
-                            key: 'AIzaSyAFKGM4i-IihJp62mQ9sAbHJG0WzfyTJQg'
-                        }
-                    }).then(function (response) {
-                        // Log full response
-                        console.log(response);
-                        let lat = response.data.results[0].geometry.location.lat;
-                        let lng = response.data.results[0].geometry.location.lng;
-
-                        let coord = {lat: lat, lng: lng};
-                        for (i = 0; i < coords.length; i++) {
-                            const infowindow = new google.maps.InfoWindow({
-                                content: 'Store Name: ' + name + '<br>' + description,
-                            });
-
-                            let marker;
-                            marker = new google.maps.Marker({
-                                position: coord,
-                                map: map,
-                                title: name,
-                            });
-                            marker.addListener("click", () => {
-                                infowindow.open(map, marker);
-                            });
-                        }
-                    });
-                }
-            }
-
-        </script>
-        <script async
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFKGM4i-IihJp62mQ9sAbHJG0WzfyTJQg&callback=initMap">
-        </script>
-
+        <div class="coords" data-attr="<?php echo $coords ?>"></div>
+        <div class="names" data-attr="<?php echo $names ?>"></div>
+        <div class="desc" data-attr="<?php echo $desc ?>"></div>
         </body>
         </html>
 
-        <?php
+
+		<?php
 	}
 
 	public function form($instance) {
