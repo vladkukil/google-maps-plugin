@@ -1,9 +1,4 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-    let coords = document.querySelector('.coords').getAttribute('data-attr');
-    let names = document.querySelector('.names').getAttribute('data-attr');
-    let desc = document.querySelector('.desc').getAttribute('data-attr');
-
-    console.log(coords[0]);
 
     let options = {
         zoom: 8,
@@ -11,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
     let map = new google.maps.Map(document.getElementById('map'), options);
     let i;
+
     for (i = 0; i < coords.length; i++) {
         let description = desc[i];
         let name = names[i];
@@ -43,5 +39,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 });
             }
         });
+
     }
 });

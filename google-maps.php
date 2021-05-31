@@ -6,15 +6,8 @@
 * Author: Vladyslav Kukil
 * Author URI: http://yourwebsiteurl.com/
 **/
-
-add_action( 'wp_enqueue_scripts', 'my_scripts_method2' );
-function my_scripts_method2(){
-	wp_enqueue_script('googleapi', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAFKGM4i-IihJp62mQ9sAbHJG0WzfyTJQg');
-	wp_enqueue_script( 'axios','https://unpkg.com/axios/dist/axios.min.js' );
-	wp_enqueue_script( 'googlemaps', plugins_url()  . '/google-maps-plugin/map.js');
-}
-
 require_once 'class-maps-widget.php';
+
 
 function stores_post_type(){
 	$labels = array(
@@ -89,8 +82,6 @@ function Stores_meta_box() {
 	);
 }
 
-
-
 function stores_callback() {
     // generate a nonce field
 	wp_nonce_field( 'stores_meta_box', 'stores_nonce' );
@@ -153,25 +144,42 @@ add_action( 'save_post', 'stores_save');
 add_shortcode('google-maps', 'map_shortcode');
 
 
-function map_shortcode() {
+add_action( 'wp_enqueue_scripts', 'add_coords' );
 
-	return '
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <title>My Google Map</title>
-</head>
-<body>
-<h1>Our stores are located:</h1>
-<div id="map"></div>
-</body>
-</html>';
+function add_coords() {
+	$q_args = array(
+		'post_type' => 'stores',
+	);
+	$coords = array();
+	$names  = array();
+	$desc   = array();
+	$query  = new WP_Query( $q_args );
+	while ( $query->have_posts() ) {
+		$query->the_post();
+		global $post;
+		array_push( $coords, get_post_meta( $post->ID, 'store-address', true ) );
+		array_push( $names, get_post_meta( $post->ID, 'store-name', true ) );
+		array_push( $desc, get_post_meta( $post->ID, 'store-description', true ) );
+	}
+	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script('googleapi', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAFKGM4i-IihJp62mQ9sAbHJG0WzfyTJQg');
+	wp_enqueue_script( 'axios','https://unpkg.com/axios/dist/axios.min.js' );
+	wp_enqueue_script( 'googlemaps', plugins_url()  . '/google-maps-plugin/map.js');
 
+	wp_localize_script( 'googlemaps', 'coords', $coords );
+	wp_localize_script( 'googlemaps', 'desc', $desc );
+	wp_localize_script( 'googlemaps', 'names', $names );
 }
-?>
+
+function map_shortcode() {
+	return '<style>
+                #map{
+                    height:400px;
+                    width:100%;
+                }
+            </style>
+            <h1>Our stores are located:</h1> 
+            <div id="map"></div>';
+}
 
 
